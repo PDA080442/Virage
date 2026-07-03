@@ -1,7 +1,7 @@
-<script setup lang="ts">
-await navigateTo("/products", { replace: true });
-</script>
-
 <template>
   <div />
 </template>
+
+<script setup lang="ts">
+await navigateTo('/login', { replace: true })
+</script>
