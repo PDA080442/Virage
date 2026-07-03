@@ -1,16 +1,10 @@
 import { defineStore } from 'pinia'
-import { api } from '~/utils/api'
-import { ensureCsrfCookie } from '~/utils/sanctum'
-
-export interface Product {
-  id: number
-  name: string
-  description: string
-  price: string
-  image_url: string
-  created_at: string
-  updated_at: string
-}
+import type { Product } from '~/types/product'
+import {
+  addFavorite,
+  fetchFavorites,
+  removeFavorite,
+} from '~/utils/requests/favorites'
 
 export const useFavoritesStore = defineStore('favorites', {
   state: () => ({
@@ -24,22 +18,19 @@ export const useFavoritesStore = defineStore('favorites', {
 
   actions: {
     async fetchFavorites() {
-      const { data } = await api.get<Product[]>('/me/favorites')
-      this.items = data
-      return data
+      this.items = await fetchFavorites()
+      return this.items
     },
 
     async toggle(productId: number) {
-      await ensureCsrfCookie()
-
       if (this.isFavorite(productId)) {
-        await api.delete(`/favorites/${productId}`)
+        await removeFavorite(productId)
         this.items = this.items.filter((item) => item.id !== productId)
         return
       }
 
-      const { data } = await api.post<Product>(`/favorites/${productId}`)
-      this.items.push(data)
+      const product = await addFavorite(productId)
+      this.items.push(product)
     },
   },
 })

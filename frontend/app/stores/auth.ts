@@ -1,21 +1,12 @@
 import { defineStore } from 'pinia'
-import { api } from '~/utils/api'
+import type { LoginCredentials, RegisterPayload } from '~/types/auth'
+import type { User } from '~/types/user'
 import {
+  fetchUser as fetchUserRequest,
   login as loginRequest,
+  logout as logoutRequest,
   register as registerRequest,
-  type LoginCredentials,
-  type RegisterPayload,
-} from '~/utils/auth'
-import { ensureCsrfCookie } from '~/utils/sanctum'
-
-export interface User {
-  id: number
-  name: string
-  email: string
-  email_verified_at: string | null
-  created_at: string
-  updated_at: string
-}
+} from '~/utils/requests/auth'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -38,16 +29,15 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
-      await ensureCsrfCookie()
-      await api.post('/logout')
+      await logoutRequest()
       this.user = null
     },
 
     async fetchUser() {
       try {
-        const { data } = await api.get<User>('/user')
-        this.user = data
-        return data
+        const user = await fetchUserRequest()
+        this.user = user
+        return user
       } catch {
         this.user = null
         return null

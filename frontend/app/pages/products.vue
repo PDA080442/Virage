@@ -110,10 +110,11 @@
 <script setup lang="ts">
 import { ArrowPathIcon, HeartIcon } from '@heroicons/vue/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/vue/24/solid'
-import { isAxiosError } from 'axios'
+import type { Product } from '~/types/product'
 import { useAuthStore } from '~/stores/auth'
-import { useFavoritesStore, type Product } from '~/stores/favorites'
-import { api } from '~/utils/api'
+import { useFavoritesStore } from '~/stores/favorites'
+import { formatPrice } from '~/utils/format'
+import { fetchProducts } from '~/utils/requests/products'
 
 definePageMeta({
   layout: 'default',
@@ -126,23 +127,16 @@ const favoritesStore = useFavoritesStore()
 const products = ref<Product[]>([])
 const isLoading = ref(true)
 const error = ref('')
-const toggleError = ref('')
-const togglingId = ref<number | null>(null)
-
-function formatPrice(price: string) {
-  return new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-  }).format(Number(price))
-}
+const { toggleError, togglingId, toggle: handleToggle } = useFavoriteToggle(
+  'Не удалось изменить избранное',
+)
 
 async function loadProducts() {
   isLoading.value = true
   error.value = ''
 
   try {
-    const { data } = await api.get<Product[]>('/products')
-    products.value = data
+    products.value = await fetchProducts()
 
     if (authStore.isAuthenticated) {
       await favoritesStore.fetchFavorites()
@@ -151,24 +145,6 @@ async function loadProducts() {
     error.value = 'Не удалось загрузить товары'
   } finally {
     isLoading.value = false
-  }
-}
-
-async function handleToggle(productId: number) {
-  toggleError.value = ''
-  togglingId.value = productId
-
-  try {
-    await favoritesStore.toggle(productId)
-  } catch (err) {
-    if (isAxiosError(err) && err.response?.status === 401) {
-      await navigateTo('/login')
-      return
-    }
-
-    toggleError.value = 'Не удалось изменить избранное'
-  } finally {
-    togglingId.value = null
   }
 }
 

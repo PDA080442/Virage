@@ -118,8 +118,9 @@
 <script setup lang="ts">
 import { ArrowPathIcon, HeartIcon } from '@heroicons/vue/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/vue/24/solid'
-import { isAxiosError } from 'axios'
 import { useFavoritesStore } from '~/stores/favorites'
+import { formatPrice } from '~/utils/format'
+import { redirectToLoginIfUnauthorized } from '~/utils/http'
 
 definePageMeta({
   layout: 'default',
@@ -130,15 +131,9 @@ const favoritesStore = useFavoritesStore()
 
 const isLoading = ref(true)
 const error = ref('')
-const toggleError = ref('')
-const togglingId = ref<number | null>(null)
-
-function formatPrice(price: string) {
-  return new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-  }).format(Number(price))
-}
+const { toggleError, togglingId, toggle: handleRemove } = useFavoriteToggle(
+  'Не удалось убрать из избранного',
+)
 
 async function loadFavorites() {
   isLoading.value = true
@@ -147,32 +142,13 @@ async function loadFavorites() {
   try {
     await favoritesStore.fetchFavorites()
   } catch (err) {
-    if (isAxiosError(err) && err.response?.status === 401) {
-      await navigateTo('/login')
+    if (await redirectToLoginIfUnauthorized(err)) {
       return
     }
 
     error.value = 'Не удалось загрузить избранное'
   } finally {
     isLoading.value = false
-  }
-}
-
-async function handleRemove(productId: number) {
-  toggleError.value = ''
-  togglingId.value = productId
-
-  try {
-    await favoritesStore.toggle(productId)
-  } catch (err) {
-    if (isAxiosError(err) && err.response?.status === 401) {
-      await navigateTo('/login')
-      return
-    }
-
-    toggleError.value = 'Не удалось убрать из избранного'
-  } finally {
-    togglingId.value = null
   }
 }
 
