@@ -1,30 +1,17 @@
 <template>
   <div class="mx-auto mt-8 max-w-sm">
     <div class="mb-6 text-center">
-      <h1 class="text-2xl font-semibold tracking-tight">
-        Вход
-      </h1>
-      <p class="mt-1 text-sm text-gray-500">
-        Введите email и пароль
-      </p>
+      <h1 class="text-2xl font-semibold tracking-tight">Вход</h1>
+      <p class="mt-1 text-sm text-gray-500">Введите email и пароль</p>
     </div>
 
     <form
       class="space-y-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
       @submit.prevent="onSubmit"
     >
-      <UAlert
-        v-if="generalError"
-        color="error"
-        :title="generalError"
-      />
+      <UAlert v-if="generalError" color="error" :title="generalError" />
 
-      <UFormField
-        label="Email"
-        name="email"
-        :error="errors.email"
-        required
-      >
+      <UFormField label="Email" name="email" :error="errors.email" required>
         <UInput
           v-model="form.email"
           type="email"
@@ -75,38 +62,38 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth'
-import { parseValidationErrors } from '~/utils/validation'
+import { useAuthStore } from "~/stores/auth";
+import { parseValidationErrors } from "~/utils/validation";
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
 const form = reactive({
-  email: '',
-  password: '',
-})
+  email: "",
+  password: "",
+});
 
-const errors = ref<Record<string, string>>({})
-const generalError = ref('')
-const isSubmitting = ref(false)
+const errors = ref<Record<string, string>>({});
+const generalError = ref("");
+const isSubmitting = ref(false);
 
 async function onSubmit() {
-  errors.value = {}
-  generalError.value = ''
-  isSubmitting.value = true
+  errors.value = {};
+  generalError.value = "";
+  isSubmitting.value = true;
 
   try {
-    await authStore.login(form)
-    await navigateTo('/products')
+    await authStore.login(form);
+    await navigateTo("/products");
   } catch (error) {
-    const fieldErrors = parseValidationErrors(error)
+    const fieldErrors = parseValidationErrors(error);
 
     if (Object.keys(fieldErrors).length > 0) {
-      errors.value = fieldErrors
+      errors.value = fieldErrors;
     } else {
-      generalError.value = 'Не удалось войти'
+      generalError.value = "Не удалось войти";
     }
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
 }
 </script>
