@@ -8,8 +8,8 @@ const favoritesStore = useFavoritesStore()
 
 function linkClass(path: string) {
   return route.path === path
-    ? 'font-semibold text-gray-900'
-    : 'text-gray-600 hover:text-gray-900'
+    ? 'text-gray-900 font-medium'
+    : 'text-gray-500 hover:text-gray-900'
 }
 
 async function handleLogout() {
@@ -20,55 +20,70 @@ async function handleLogout() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <header class="border-b border-gray-200 bg-white">
-      <nav class="container mx-auto flex items-center gap-6 px-4 py-4">
+  <div class="min-h-screen bg-gray-50 text-gray-900">
+    <header class="sticky top-0 z-10 border-b border-gray-200 bg-white/80 backdrop-blur">
+      <nav class="mx-auto flex h-14 max-w-5xl items-center gap-8 px-4">
         <NuxtLink
           to="/products"
-          class="no-underline"
-          :class="linkClass('/products')"
+          class="text-lg font-semibold tracking-tight text-gray-900 no-underline"
         >
-          Товары
-        </NuxtLink>
-        <NuxtLink
-          to="/favorites"
-          class="no-underline"
-          :class="linkClass('/favorites')"
-        >
-          Избранное
+          Virage
         </NuxtLink>
 
-        <div class="ml-auto flex items-center gap-4">
+        <div class="flex items-center gap-6 text-sm">
+          <NuxtLink
+            to="/products"
+            class="no-underline transition-colors"
+            :class="linkClass('/products')"
+          >
+            Товары
+          </NuxtLink>
+          <NuxtLink
+            to="/favorites"
+            class="no-underline transition-colors"
+            :class="linkClass('/favorites')"
+          >
+            Избранное
+          </NuxtLink>
+        </div>
+
+        <div class="ml-auto flex items-center gap-4 text-sm">
           <template v-if="authStore.isAuthenticated">
-            <button
-              type="button"
-              class="cursor-pointer text-gray-600 hover:text-gray-900"
+            <span
+              v-if="authStore.user"
+              class="text-gray-500"
+            >
+              {{ authStore.user.name }}
+            </span>
+            <UButton
+              color="neutral"
+              variant="ghost"
+              size="sm"
               @click="handleLogout"
             >
               Выйти
-            </button>
+            </UButton>
           </template>
           <template v-else>
             <NuxtLink
               to="/login"
-              class="no-underline"
+              class="no-underline transition-colors"
               :class="linkClass('/login')"
             >
               Войти
             </NuxtLink>
-            <NuxtLink
+            <UButton
               to="/register"
-              class="no-underline"
-              :class="linkClass('/register')"
+              size="sm"
             >
               Регистрация
-            </NuxtLink>
+            </UButton>
           </template>
         </div>
       </nav>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
+    <main class="mx-auto max-w-5xl px-4 py-8">
       <slot />
     </main>
   </div>
