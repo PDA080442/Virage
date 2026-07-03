@@ -13,9 +13,14 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/ui',
     '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
   ],
 
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
+  },
+
+  pinia: {
+    storesDirs: ['app/stores'],
   },
 })
