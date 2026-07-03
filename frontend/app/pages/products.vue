@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full">
     <div class="mb-6">
       <h1 class="text-2xl font-semibold tracking-tight">
         Товары
@@ -116,6 +116,7 @@ import { useFavoritesStore, type Product } from '~/stores/favorites'
 import { api } from '~/utils/api'
 
 definePageMeta({
+  layout: 'default',
   middleware: 'auth',
 })
 

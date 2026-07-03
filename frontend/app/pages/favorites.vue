@@ -122,6 +122,7 @@ import { isAxiosError } from 'axios'
 import { useFavoritesStore } from '~/stores/favorites'
 
 definePageMeta({
+  layout: 'default',
   middleware: 'auth',
 })
 

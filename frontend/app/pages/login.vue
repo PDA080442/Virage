@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto mt-8 max-w-sm">
+  <div v-if="!isCheckingAuth" class="mt-8">
     <div class="mb-6 text-center">
       <h1 class="text-2xl font-semibold tracking-tight">Вход</h1>
       <p class="mt-1 text-sm text-gray-500">Введите email и пароль</p>
@@ -66,6 +66,7 @@ import { useAuthStore } from "~/stores/auth";
 import { parseValidationErrors } from "~/utils/validation";
 
 definePageMeta({
+  layout: 'auth',
   middleware: 'guest',
 })
 
@@ -78,7 +79,20 @@ const form = reactive({
 
 const errors = ref<Record<string, string>>({});
 const generalError = ref("");
+const isCheckingAuth = ref(true);
 const isSubmitting = ref(false);
+
+onMounted(async () => {
+  await authStore.fetchUser();
+
+  if (authStore.isAuthenticated) {
+    setPageLayout("default");
+    await navigateTo("/products", { replace: true });
+    return;
+  }
+
+  isCheckingAuth.value = false;
+});
 
 async function onSubmit() {
   errors.value = {};
@@ -87,6 +101,7 @@ async function onSubmit() {
 
   try {
     await authStore.login(form);
+    setPageLayout("default");
     await navigateTo("/products");
   } catch (error) {
     const fieldErrors = parseValidationErrors(error);
