@@ -15,7 +15,7 @@ function linkClass(path: string) {
 async function handleLogout() {
   await authStore.logout()
   favoritesStore.$reset()
-  await navigateTo('/products')
+  await navigateTo('/login')
 }
 </script>
 

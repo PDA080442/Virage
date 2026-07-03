@@ -115,6 +115,10 @@ import { useAuthStore } from '~/stores/auth'
 import { useFavoritesStore, type Product } from '~/stores/favorites'
 import { api } from '~/utils/api'
 
+definePageMeta({
+  middleware: 'auth',
+})
+
 const authStore = useAuthStore()
 const favoritesStore = useFavoritesStore()
 
@@ -151,12 +155,6 @@ async function loadProducts() {
 
 async function handleToggle(productId: number) {
   toggleError.value = ''
-
-  if (!authStore.isAuthenticated) {
-    await navigateTo('/login')
-    return
-  }
-
   togglingId.value = productId
 
   try {

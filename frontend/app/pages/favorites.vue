@@ -121,6 +121,10 @@ import { HeartIcon as HeartSolidIcon } from '@heroicons/vue/24/solid'
 import { isAxiosError } from 'axios'
 import { useFavoritesStore } from '~/stores/favorites'
 
+definePageMeta({
+  middleware: 'auth',
+})
+
 const favoritesStore = useFavoritesStore()
 
 const isLoading = ref(true)
