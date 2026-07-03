@@ -94,6 +94,10 @@
 import { useAuthStore } from "~/stores/auth";
 import { parseValidationErrors } from "~/utils/validation";
 
+definePageMeta({
+  middleware: 'guest',
+})
+
 const authStore = useAuthStore();
 
 const form = reactive({
