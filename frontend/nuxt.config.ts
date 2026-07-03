@@ -3,6 +3,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  css: ['~/assets/css/main.css'],
+
   modules: [
     '@nuxt/a11y',
     '@nuxt/content',
@@ -12,16 +14,11 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/test-utils',
     '@nuxt/ui',
-    '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
   ],
 
-  tailwindcss: {
-    cssPath: '~/assets/css/tailwind.css',
-  },
-
   pinia: {
-    storesDirs: ['app/stores'],
+    storesDirs: ['app/stores/**'],
   },
 
   routeRules: {
