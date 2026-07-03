@@ -23,4 +23,9 @@ export default defineNuxtConfig({
   pinia: {
     storesDirs: ['app/stores'],
   },
+
+  routeRules: {
+    '/api/**': { proxy: 'http://127.0.0.1:8000/api/**' },
+    '/sanctum/**': { proxy: 'http://127.0.0.1:8000/sanctum/**' },
+  },
 })
