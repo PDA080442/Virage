@@ -15,6 +15,8 @@ php artisan migrate --force
 
 cd ../frontend
 npm ci
+export NUXT_TELEMETRY_DISABLED=1
+export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=1536}"
 NUXT_BACKEND_URL=http://127.0.0.1:8000 npm run build
 
 if [ "$(id -u)" -eq 0 ]; then
