@@ -1,35 +1,18 @@
 <template>
   <header class="sticky top-0 z-10 border-b border-gray-200 bg-white/80 backdrop-blur">
-    <nav class="mx-auto flex h-14 max-w-5xl items-center gap-8 px-4">
+    <nav class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2 sm:h-14 sm:flex-nowrap sm:gap-8 sm:py-0">
       <NuxtLink
         to="/products"
-        class="text-lg font-semibold tracking-tight text-gray-900 no-underline"
+        class="order-1 shrink-0 text-lg font-semibold tracking-tight text-gray-900 no-underline"
       >
         Virage
       </NuxtLink>
 
-      <div class="flex items-center gap-6 text-sm">
-        <NuxtLink
-          to="/products"
-          class="no-underline transition-colors"
-          :class="linkClass('/products')"
-        >
-          Товары
-        </NuxtLink>
-        <NuxtLink
-          to="/favorites"
-          class="no-underline transition-colors"
-          :class="linkClass('/favorites')"
-        >
-          Избранное
-        </NuxtLink>
-      </div>
-
-      <div class="ml-auto flex items-center gap-4 text-sm">
+      <div class="order-2 ml-auto flex shrink-0 items-center gap-2 text-sm sm:order-3 sm:ml-0 sm:gap-4">
         <template v-if="authStore.isAuthenticated">
           <span
             v-if="authStore.user"
-            class="text-gray-500"
+            class="hidden max-w-24 truncate text-gray-500 sm:inline sm:max-w-none"
           >
             {{ authStore.user.name }}
           </span>
@@ -57,6 +40,23 @@
             Регистрация
           </UButton>
         </template>
+      </div>
+
+      <div class="order-3 flex w-full basis-full items-center gap-4 text-sm sm:order-2 sm:w-auto sm:basis-auto sm:flex-1 sm:gap-6">
+        <NuxtLink
+          to="/products"
+          class="no-underline transition-colors"
+          :class="linkClass('/products')"
+        >
+          Товары
+        </NuxtLink>
+        <NuxtLink
+          to="/favorites"
+          class="no-underline transition-colors"
+          :class="linkClass('/favorites')"
+        >
+          Избранное
+        </NuxtLink>
       </div>
     </nav>
   </header>
